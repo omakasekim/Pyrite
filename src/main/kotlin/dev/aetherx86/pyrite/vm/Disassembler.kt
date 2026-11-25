@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.vm
+package dev.omakasekim.pyrite.vm
 
 /**
  * Turns verified bytecode back into assembler text.

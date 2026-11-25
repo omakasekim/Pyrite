@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.vm
+package dev.omakasekim.pyrite.vm
 
 /**
  * Opcodes, stored as bytes in a flat array. There is one object per program rather than one per

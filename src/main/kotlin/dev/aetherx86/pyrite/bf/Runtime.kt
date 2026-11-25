@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.bf
+package dev.omakasekim.pyrite.bf
 
 import java.io.BufferedOutputStream
 import java.io.InputStream

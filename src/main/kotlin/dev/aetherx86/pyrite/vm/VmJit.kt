@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.vm
+package dev.omakasekim.pyrite.vm
 
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
@@ -27,7 +27,7 @@ class JitUnavailable(message: String) : Exception(message)
  * arguments and the call depth, so a VM call is one `invokestatic` that C2 can inline.
  */
 object VmJit {
-    private const val CLASS_NAME = "dev/aetherx86/pyrite/vm/CompiledVm"
+    private const val CLASS_NAME = "dev/omakasekim/pyrite/vm/CompiledVm"
 
     /** Compiles a program. The class is hidden, so it unloads once unreferenced. */
     fun compile(program: VerifiedProgram): VmProgram {
@@ -125,9 +125,9 @@ object VmJit {
             mv.visitJumpInsn(Opcodes.IF_ICMPLE, ok)
             mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
-                "dev/aetherx86/pyrite/vm/VmSupport",
+                "dev/omakasekim/pyrite/vm/VmSupport",
                 "callDepthExceeded",
-                "()Ldev/aetherx86/pyrite/vm/VmTrap;",
+                "()Ldev/omakasekim/pyrite/vm/VmTrap;",
                 false,
             )
             mv.visitInsn(Opcodes.ATHROW)
@@ -245,9 +245,9 @@ object VmJit {
         mv.visitJumpInsn(Opcodes.IFNE, ok)
         mv.visitMethodInsn(
             Opcodes.INVOKESTATIC,
-            "dev/aetherx86/pyrite/vm/VmSupport",
+            "dev/omakasekim/pyrite/vm/VmSupport",
             "divideByZero",
-            "()Ldev/aetherx86/pyrite/vm/VmTrap;",
+            "()Ldev/omakasekim/pyrite/vm/VmTrap;",
             false,
         )
         mv.visitInsn(Opcodes.ATHROW)

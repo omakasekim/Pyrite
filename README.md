@@ -207,7 +207,7 @@ build/install/pyrite/bin/pyrite bench program.asm --runs 10 --json
 build/install/pyrite/bin/pyrite --version
 ```
 
-To use the library, it is published to GitHub Packages as `dev.aetherx86.pyrite:pyrite`.
+To use the library, it is published to GitHub Packages as `dev.omakasekim.pyrite:pyrite`.
 
 ```kotlin
 val ir = Optimizer.optimize(Parser.parse(source))

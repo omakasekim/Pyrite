@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.bf
+package dev.omakasekim.pyrite.bf
 
 /**
  * Brainfuck intermediate representation. Every cell access is relative to the data pointer, so

@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.bf
+package dev.omakasekim.pyrite.bf
 
 import org.objectweb.asm.ClassTooLargeException
 import org.objectweb.asm.ClassWriter
@@ -45,9 +45,9 @@ class BfTooLarge(message: String) : Exception(message)
  * every method under [METHOD_BUDGET] bytes by outlining big loops and splitting long runs.
  */
 object BfJit {
-    private const val CLASS_NAME = "dev/aetherx86/pyrite/bf/CompiledBf"
-    private const val SUPER_NAME = "dev/aetherx86/pyrite/bf/CompiledProgram"
-    private const val IO = "dev/aetherx86/pyrite/bf/BfIo"
+    private const val CLASS_NAME = "dev/omakasekim/pyrite/bf/CompiledBf"
+    private const val SUPER_NAME = "dev/omakasekim/pyrite/bf/CompiledProgram"
+    private const val IO = "dev/omakasekim/pyrite/bf/BfIo"
 
     /** Signature of generated methods: tape, pointer and I/O in, final pointer out. */
     private const val METHOD_DESC = "([BIL$IO;)I"

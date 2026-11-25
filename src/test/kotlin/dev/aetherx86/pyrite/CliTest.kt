@@ -1,6 +1,6 @@
-package dev.aetherx86.pyrite
+package dev.omakasekim.pyrite
 
-import dev.aetherx86.pyrite.vm.Assembler
+import dev.omakasekim.pyrite.vm.Assembler
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File

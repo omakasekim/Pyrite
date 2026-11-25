@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
 }
 
-group = "dev.aetherx86.pyrite"
+group = "dev.omakasekim.pyrite"
 version = "0.2.1"
 
 repositories { mavenCentral() }
@@ -27,7 +27,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("dev.aetherx86.pyrite.MainKt")
+    mainClass.set("dev.omakasekim.pyrite.MainKt")
     applicationName = "pyrite"
 }
 
@@ -46,7 +46,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Aetherx86/Pyrite")
+            url = uri("https://maven.pkg.github.com/omakasekim/Pyrite")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")

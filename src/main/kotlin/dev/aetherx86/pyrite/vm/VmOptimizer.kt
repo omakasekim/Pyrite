@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite.vm
+package dev.omakasekim.pyrite.vm
 
 import java.util.IdentityHashMap
 

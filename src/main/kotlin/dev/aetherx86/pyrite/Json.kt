@@ -1,4 +1,4 @@
-package dev.aetherx86.pyrite
+package dev.omakasekim.pyrite
 
 /** Minimal JSON writer for command line output. Maps keep their insertion order. */
 internal object Json {
