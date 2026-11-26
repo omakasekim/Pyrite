@@ -1,5 +1,7 @@
 # Pyrite
 
+> Also available in Korean: [README.ko.md](README.ko.md)
+
 Two small languages compiled to JVM bytecode at run time, written in Kotlin on ASM. HotSpot's C2
 compiler then turns the generated code into machine code.
 
@@ -100,6 +102,9 @@ nothing changes:
 | `push 6; push 7; mul` | `push 42` |
 | `push 0; jz L` / `push 1; jz L` | `jmp L` / removed |
 | `push 0; add`, `push 1; mul`, `push -1; and`, `dup; drop`, `swap; swap`, `neg; neg` | removed |
+| `push k; dup; add/sub/mul/div/mod/and/or/xor/eq/lt` | folded to `push (k op k)` (unless `div`/`mod` by 0) |
+| `push -1; mul` / `dup; and` / `dup; or` | `neg` / removed |
+| `store k; load k` | `dup; store k` |
 | a jump to a `jmp` | a jump to its final target |
 | `jmp` to the next instruction / `jz` to the next instruction | removed / `drop` |
 
@@ -135,8 +140,18 @@ $ pyrite bench examples/fib.asm --runs 5
 interpreter  result 196418  min 29.960 ms  median 31.632 ms  mean 35.247 ms  (6356209 instructions)
 jit          result 196418  min 0.432 ms  median 0.435 ms  mean 0.437 ms  (compile 12.117 ms)
 speedup      72.7x (median)
+
+$ pyrite cfg examples/fib.asm --format mermaid
+flowchart TD
+  L0000["L0000 (depth=0)<br/>push 27<br/>call L0007"]
+  ...
+  L0000 -.->|call| L0007
+  L0000 --> L0006
 ```
 
+- `cfg` extracts verified basic blocks, per-function Graphviz `cluster_*` subgraphs, and call/branch
+  edges as Graphviz DOT (`--format dot`, default), Mermaid (`--format mermaid`), or JSON (`--json`),
+  optionally after `--optimize`.
 - `disasm` labels every jump target and notes each instruction's offset and the stack depth the
   verifier proved for it. Its output assembles back to the same bytes, as long as nothing is
   unreachable. Unreachable instructions are printed as comments.
@@ -203,6 +218,9 @@ build/install/pyrite/bin/pyrite vm program.asm --jit
 build/install/pyrite/bin/pyrite vm program.asm --optimize --json
 build/install/pyrite/bin/pyrite verify program.asm --json
 build/install/pyrite/bin/pyrite disasm program.asm --optimize
+build/install/pyrite/bin/pyrite cfg program.asm --format dot
+build/install/pyrite/bin/pyrite cfg program.asm --optimize --format mermaid
+build/install/pyrite/bin/pyrite cfg program.asm --json
 build/install/pyrite/bin/pyrite bench program.asm --runs 10 --json
 build/install/pyrite/bin/pyrite --version
 ```

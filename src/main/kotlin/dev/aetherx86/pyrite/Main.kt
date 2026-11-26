@@ -13,6 +13,7 @@ import dev.omakasekim.pyrite.bf.Parser
 import dev.omakasekim.pyrite.bf.TapeOutOfBounds
 import dev.omakasekim.pyrite.vm.Assembler
 import dev.omakasekim.pyrite.vm.AssemblyError
+import dev.omakasekim.pyrite.vm.CfgExporter
 import dev.omakasekim.pyrite.vm.Disassembler
 import dev.omakasekim.pyrite.vm.JitUnavailable
 import dev.omakasekim.pyrite.vm.OptimizationReport
@@ -29,7 +30,7 @@ import java.io.PrintStream
 import java.util.Locale
 import kotlin.system.exitProcess
 
-const val VERSION = "0.2.1"
+const val VERSION = "0.3.0"
 
 private val USAGE = """
     usage: pyrite <command> <file> [options]
@@ -47,6 +48,10 @@ private val USAGE = """
           --json           print the report as JSON
       disasm <file>   print verified bytecode as annotated assembler text
           --optimize       disassemble the optimized program
+      cfg <file>      export the verified basic-block CFG and call graph
+          --optimize       export the optimized program's CFG
+          --format FMT     output format: dot (default) or mermaid
+          --json           print basic blocks and edges as JSON
       bench <file>    time the interpreter and the JIT, and check that they agree
           --runs N         timed runs per backend after one warm-up (default 5)
           --fuel N         instruction budget for the interpreter
@@ -111,6 +116,7 @@ internal class Cli(
                 "vm" -> runVm(path, Options(rest, setOf("--jit", "--optimize", "--json"), setOf("--fuel")))
                 "verify" -> verify(path, Options(rest, setOf("--json"), emptySet()))
                 "disasm" -> disasm(path, Options(rest, setOf("--optimize"), emptySet()))
+                "cfg" -> cfg(path, Options(rest, setOf("--optimize", "--json"), setOf("--format")))
                 "bench" -> bench(path, Options(rest, setOf("--optimize", "--json"), setOf("--runs", "--fuel")))
                 else -> {
                     err.println("error: unknown command '$command'")
@@ -254,6 +260,20 @@ internal class Cli(
             )
         }
         out.print(Disassembler.disassemble(program))
+        return 0
+    }
+
+    private fun cfg(path: String, options: Options): Int {
+        val (program, _) = load(path, "--optimize" in options)
+        if ("--json" in options) {
+            out.println(Json.write(CfgExporter.toMap(program)))
+            return 0
+        }
+        when (val fmt = options.values["--format"] ?: "dot") {
+            "dot" -> out.print(CfgExporter.toDot(program))
+            "mermaid" -> out.print(CfgExporter.toMermaid(program))
+            else -> throw UsageError("--format must be dot or mermaid, got '$fmt'")
+        }
         return 0
     }
 

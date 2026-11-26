@@ -40,6 +40,11 @@ class OptimizerTest {
         // A large folded constant needs the long encoding, and a small one the short.
         assertOptimizesTo("push 65536\nhalt", "push 256\npush 256\nmul\nhalt")
         assertOptimizesTo("push 1\nhalt", "push 65536\npush 65535\nsub\nhalt")
+        // v0.3.0: push+dup folding, strength reduction, idempotent bit ops, store-load forwarding.
+        assertOptimizesTo("push 49\nhalt", "push 7\ndup\nmul\nhalt")
+        assertOptimizesTo("load 0\nneg\nhalt", "load 0\npush -1\nmul\nhalt")
+        assertOptimizesTo("load 0\nhalt", "load 0\ndup\nand\ndup\nor\nhalt")
+        assertOptimizesTo("load 0\ndup\nstore 1\nhalt", "load 0\nstore 1\nload 1\nhalt")
     }
 
     @Test

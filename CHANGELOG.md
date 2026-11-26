@@ -3,6 +3,17 @@
 Versions follow this rule: a bug or security fix increments `0.0.X`, and new functionality
 or new platform support increments `0.X.0`.
 
+## [0.3.0] - 2026-11-26
+
+- Added `CfgExporter` and CLI command `pyrite cfg <file> [--optimize] [--format dot|mermaid] [--json]`
+  to extract verified basic blocks (with entry stack depths, owning functions, branch/fallthrough/call
+  edges) and export deterministic Graphviz DOT, Mermaid flowcharts, or structured JSON.
+- Extended `VmOptimizer` with `push k; dup; <op>` folding, strength reduction (`push -1; mul -> neg`),
+  idempotent bit-op elimination (`dup; and` and `dup; or`), and `store k; load k -> dup; store k`
+  local forwarding, all verified and differentially checked against interpreter and JIT.
+- Upgraded Gradle wrapper to `9.9.2`, `actions/setup-java` to `6.3.0`, added Korean documentation
+  (`README.ko.md`), and enabled automatic `main` push and pull-request CI triggers.
+
 ## [0.2.1] - 2026-11-21
 
 - The CLI and disassembler tests compare output with normalized line endings, so they pass on

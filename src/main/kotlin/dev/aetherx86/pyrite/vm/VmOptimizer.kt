@@ -119,6 +119,8 @@ object VmOptimizer {
 
     private fun cancels(first: Byte, second: Byte): Boolean =
         (first == Op.DUP && second == Op.DROP) ||
+            (first == Op.DUP && second == Op.AND) ||
+            (first == Op.DUP && second == Op.OR) ||
             (first == Op.SWAP && second == Op.SWAP) ||
             (first == Op.NEG && second == Op.NEG) ||
             (first == Op.LOAD && second == Op.DROP)
@@ -159,6 +161,16 @@ object VmOptimizer {
                     continue
                 }
             }
+            if (three != null && isPush(three[0]) && three[1].op == Op.DUP) {
+                val folded = fold(three[2].op, three[0].operand, three[0].operand)
+                if (folded != null) {
+                    a.operand = folded
+                    a.op = Op.CONST32
+                    list.removeAt(i + 2)
+                    list.removeAt(i + 1)
+                    continue
+                }
+            }
             val two = window(2)
             if (two != null) {
                 val b = two[1]
@@ -166,6 +178,20 @@ object VmOptimizer {
                     isPush(a) && b.op == Op.NEG -> {
                         a.operand = -a.operand
                         list.removeAt(i + 1)
+                        continue
+                    }
+                    isPush(a) && a.operand == -1 && b.op == Op.MUL -> {
+                        a.op = Op.NEG
+                        a.operand = 0
+                        list.removeAt(i + 1)
+                        continue
+                    }
+                    a.op == Op.STORE && b.op == Op.LOAD && a.operand == b.operand -> {
+                        val slot = a.operand
+                        a.op = Op.DUP
+                        a.operand = 0
+                        b.op = Op.STORE
+                        b.operand = slot
                         continue
                     }
                     isPush(a) && (b.op == Op.JZ || b.op == Op.JNZ) -> {
